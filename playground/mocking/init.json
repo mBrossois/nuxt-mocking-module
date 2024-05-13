@@ -1,0 +1,10 @@
+{
+    "name": "init",
+    "route": "/init",
+    "method": "GET",
+    "delay": 100,
+    "responses": [
+        "./mocks/init-succes",
+        "./mocks/init-error"
+    ]
+}

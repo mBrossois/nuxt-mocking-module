@@ -1,0 +1,6 @@
+{
+    "mocks": [{
+        "groupName": "General",
+        "mockList": ["./init", "./init-post"]
+    }]
+}

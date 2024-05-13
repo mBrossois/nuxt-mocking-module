@@ -1,0 +1,7 @@
+{
+    "name": "init-404",
+    "status": 404,
+    "body" : {
+        "succes": false
+    }
+}

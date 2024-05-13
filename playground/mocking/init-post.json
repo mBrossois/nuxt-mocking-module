@@ -1,0 +1,9 @@
+{
+    "name": "set-init",
+    "route": "/set-init",
+    "method": "POST",
+    "responses": [
+        "./mocks/init-succes",
+        "./mocks/init-error"
+    ]
+}

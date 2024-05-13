@@ -1,0 +1,72 @@
+
+
+body:has( div > #mocking-body) {
+    margin: 0;
+}
+
+#mocking-body .text {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0;
+    margin: 0;
+}
+
+#mocking-body .default-font {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#mocking-body .default-font-size {
+    font-size: 16px;
+}
+
+#mocking-body .flex-column {
+    display: flex;
+    flex-direction: column;    
+}
+
+#mocking-body .justify-between {
+    justify-content: space-between;
+}
+
+#mocking-body .flex {
+    display: flex;
+}
+
+#mocking-body .align-center {
+    align-items: center;
+}
+
+/* #mocking-body button.as-icon {
+    background-color: unset;
+    border: unset;
+    height: fit-content;
+    width: fit-content;
+}
+
+#mocking-body .response-row {
+    width: 100%;
+    display: flex;
+    gap: .5rem;
+
+    padding: 1rem;
+    box-sizing: border-box;
+
+}
+
+#mocking-body .response-row.header {
+    background-color: var(--triadic-first);
+    color: black;
+}
+
+#mocking-body .name {
+    width: 15rem;
+}
+#mocking-body .method {
+    width: 4rem;
+}
+#mocking-body .responses {
+    min-width: 8rem;
+    flex: 1;
+}
+#mocking-body .delay {
+    width: 6rem;
+} */
