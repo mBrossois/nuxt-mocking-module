@@ -34,7 +34,16 @@ svg.small {
   height: 24px;
   width: 24px;
 }
+
+svg.xs {
+  height: 16px;
+  width: 16px;
+}
 .up {
   transform: rotateZ(180deg);
+}
+
+.right {
+  transform: rotateZ(270deg);
 }
 </style>

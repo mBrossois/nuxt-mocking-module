@@ -2,32 +2,54 @@
   <div class="dropdown">
     <button
       class="dropbtn"
-      @click="onToggle"
+      @click.stop="onToggle"
     >
-      <h1 class="text flex align-center">
+      <component
+        :is="componentTextType"
+        class="text flex align-center"
+      >
         {{ activeDropdown }}
         <chevron-icon
+          :size="size"
           :orientation="orientation"
         />
-      </h1>
+      </component>
     </button>
     <div
       id="myDropdown"
+      ref="dropdown"
       class="dropdown-content"
+      tabindex="0"
       :class="dropdownCss"
+      @click.stop
     >
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Search..."
-        @keyup="onKeyUp"
-      >
+      <div class="search-block">
+        <input
+          id="searchInput"
+          ref="searchInput"
+          type="text"
+          placeholder="Search..."
+          @keyup="onKeyUp"
+        >
+        <img
+          class="search-icon"
+          src="../assets/svg/search-icon.svg"
+          alt="search icon"
+        >
+      </div>
+
       <button
         v-for="dropdownValue in dropdownValues"
         :key="dropdownValue"
         :class="selectedClass(dropdownValue)"
         @click="onSelect(dropdownValue)"
       >
+        <chevron-icon
+          class="active-icon"
+          size="xs"
+          :orientation="'right'"
+          color="#ff9b04"
+        />
         {{ dropdownValue }}
       </button>
     </div>
@@ -35,27 +57,34 @@
 </template>
 
 <script setup lang="ts">
+import type { Dropdown } from '../types/dropdown'
 import chevronIcon from './chevron-icon.vue'
-import { computed, ref } from '#imports'
+import { computed, nextTick, onUnmounted, ref } from '#imports'
 
-const props = defineProps({
-  dropdownValues: Array<string>,
-  activeValue: String,
-})
+const props = defineProps<Dropdown>()
 
 const isOpen = ref(false)
+const searchInput = ref()
 const activeDropdown = ref(props.activeValue)
 
 const orientation = computed(() => isOpen.value ? 'up' : 'down')
 
 const dropdownCss = computed(() => isOpen.value ? 'open' : 'closed')
 
+const size = computed(() => props.componentTextType === 'p' ? 'small' : 'big')
+
 function selectedClass(value: string) {
   return activeDropdown.value === value ? 'active' : ''
 }
 
 function onToggle() {
-  isOpen.value = !isOpen.value
+  !isOpen.value && nextTick(() => {
+    isOpen.value = true
+    document.addEventListener('click', closeDropdown)
+  })
+  isOpen.value && nextTick(() => {
+    closeDropdown()
+  })
 }
 
 function onKeyUp() {
@@ -64,8 +93,18 @@ function onKeyUp() {
 
 function onSelect(value: string) {
   activeDropdown.value = value
-  isOpen.value = false
+  closeDropdown()
 }
+
+function closeDropdown() {
+  isOpen.value = false
+  document.removeEventListener('click', closeDropdown)
+  setTimeout(() => searchInput.value.value = null, 200)
+}
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeDropdown)
+})
 </script>
 
 <style scoped>
@@ -73,7 +112,7 @@ function onSelect(value: string) {
  .dropbtn {
   background-color: #ffffff00;
   padding: 0;
-  font-size: 16px;
+  font-size: 14px;
   border: none;
   cursor: pointer;
   font-family: 'Courier New', Courier, monospace;
@@ -87,24 +126,21 @@ function onSelect(value: string) {
 /* The search field */
 #searchInput {
   box-sizing: border-box;
-  background-image: url('../assets/svg/search-icon.svg');
-  background-position: 14px 12px;
-  background-repeat: no-repeat;
-  font-size: 16px;
-  padding: 14px 20px 12px 45px;
-  border: none;
-  border-bottom: 1px solid #ddd;
+
+  width: calc(100% - 1rem);
+  border-radius: 5px;
+  height: 2em;
+
+  padding-left: 1rem;
+  padding-right: 2rem;
+  border: 1px solid #ddd;
+
+  font-size: 14px;
   font-family: 'Courier New', Courier, monospace;
 }
 
 /* The search field when it gets focus/clicked on */
 #searchInput:focus {outline: 1px solid #ddd;}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
@@ -113,9 +149,11 @@ function onSelect(value: string) {
   opacity: 0;
   position: absolute;
   background-color: white;
-  min-width: 230px;
-  border: 1px solid white;
+  min-width: 150px;
+  box-shadow: 1px 1px 4px 0px #0006;
+  border-radius: 5px;
   z-index: 1;
+  padding-top: .5rem;
 
   transition: max-height 200ms ease-in-out, opacity 1ms linear 200ms;
 }
@@ -125,26 +163,48 @@ function onSelect(value: string) {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
-  display: block;
+  text-align: left;
+  display: flex;
+  align-items: center;
+
   border: unset;
   background-color: white;
   width: 100%;
   font-family: 'Courier New', Courier, monospace;
+
+  transition: all ease-in-out 200ms;
 }
 
 .dropdown-content button:hover {
   cursor: pointer;
-  background-color: black;
-  color: white;
+  color: var(--border-color);
+}
+
+.active-icon {
+  opacity: 0;
+}
+
+.dropdown-content button.active > .active-icon,
+.dropdown-content button:hover > .active-icon {
+  opacity: 1;
 }
 
 .dropdown-content button.active {
-  background-color: black;
-  color: white;
+  color: var(--border-color);
 }
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+/* Search icon block */
+.search-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-block .search-icon {
+  position: absolute;
+  right: 1rem;
+  height: 20px;
+}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .open {

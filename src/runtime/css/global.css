@@ -35,38 +35,11 @@ body:has( div > #mocking-body) {
     align-items: center;
 }
 
-/* #mocking-body button.as-icon {
-    background-color: unset;
-    border: unset;
-    height: fit-content;
-    width: fit-content;
+#mocking-body .sub-title {
+    font-size: 18px;
+    font-weight: normal;
 }
 
-#mocking-body .response-row {
-    width: 100%;
-    display: flex;
-    gap: .5rem;
-
-    padding: 1rem;
-    box-sizing: border-box;
-
+#mocking-body .bold {
+    font-weight: bold;
 }
-
-#mocking-body .response-row.header {
-    background-color: var(--triadic-first);
-    color: black;
-}
-
-#mocking-body .name {
-    width: 15rem;
-}
-#mocking-body .method {
-    width: 4rem;
-}
-#mocking-body .responses {
-    min-width: 8rem;
-    flex: 1;
-}
-#mocking-body .delay {
-    width: 6rem;
-} */

@@ -8,15 +8,16 @@
         <dropdown-search
           :dropdown-values="headerTitles"
           :active-value="headerTitles[0]"
+          component-text-type="h1"
         />
       </div>
       <div class="search-box card-layout">
         <search-block />
       </div>
       <div class="requests-list-box card-layout">
-        <p class="text default-font-size">
+        <h2 class="text sub-title">
           Requests
-        </p>
+        </h2>
         <request-block
           :requests="mappedRequests[headerTitles[0]]"
           :active-request="activeRequest.name"
@@ -24,9 +25,9 @@
         />
       </div>
       <div class="response-list-box card-layout">
-        <p class="text">
+        <h2 class="text sub-title">
           Request details
-        </p>
+        </h2>
         <request-details-block :request-details="activeRequest" />
       </div>
     </div>
@@ -59,15 +60,10 @@ const mappedRequests = allMocks.reduce((map, mocksList) => {
 }, {})
 
 const activeRequest = ref(mappedRequests[headerTitles[0]][0])
-console.log('response', mappedRequests[headerTitles[0]][0])
 
 function setActiveRequest(request: MockRequestDetails) {
   activeRequest.value = request
 }
-
-console.log(mappedRequests)
-
-console.log(allMocks)
 </script>
 
 <style>

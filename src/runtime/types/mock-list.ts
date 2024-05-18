@@ -16,5 +16,12 @@ export type MockRequestDetails = {
 }
 
 export type MockResponses = {
-  succes: boolean
+  name: string
+  status: number
+  body: object
+}
+
+export interface InputI {
+  value: string
+  type: string
 }

@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="input-search">
-      <search-field />
+      <input-field
+        :is-search="true"
+        placeholder="search..."
+      />
     </div>
     <div class="filter-selects">
       <select-button
@@ -14,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import SearchField from './search-field.vue'
+import InputField from './input-field.vue'
 import SelectButton from './select-button.vue'
 
 const filtersList = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']

@@ -1,12 +1,26 @@
 <template>
   <div class="search-box flex align-center">
-    <img src="../assets/svg/search-icon.svg">
+    <img
+      v-if="isSearch"
+      src="../assets/svg/search-icon.svg"
+    >
     <input
       class="default-font default-font-size"
-      value="search"
+      :type="inputType"
+      :value="inputValue"
+      :placeholder="placeholder"
     >
   </div>
 </template>
+
+<script setup lang="ts">
+defineProps({
+  isSearch: Boolean,
+  inputType: String,
+  inputValue: String,
+  placeholder: String,
+})
+</script>
 
 <style scoped>
 .search-box {
