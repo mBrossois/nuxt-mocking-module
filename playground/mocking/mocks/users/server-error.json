@@ -1,0 +1,6 @@
+{
+    "name": "server error",
+    "status": "error",
+    "message": "Something went wrong",
+    "code": 500
+}

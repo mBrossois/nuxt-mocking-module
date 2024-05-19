@@ -1,7 +1,6 @@
 {
-    "name": "init-404",
-    "status": 404,
-    "body" : {
-        "succes": false
-    }
+    "name": "init-error",
+    "status": "error",
+    "message": "Resource not found",
+    "code": 404
 }

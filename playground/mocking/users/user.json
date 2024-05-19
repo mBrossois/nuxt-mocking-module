@@ -1,0 +1,14 @@
+{
+    "name": "has role",
+    "route": "/api/users/.*/user",
+    "method": "GET",
+    "responses": [
+        "./mocks/init-succes",
+        "./mocks/init-error",
+        "./mocks/users/is-normal-user",
+        "./mocks/users/is-admin",
+        "./mocks/users/is-premium",
+        "./mocks/users/user-not-found",
+        "./mocks/users/server-error"
+    ]
+}

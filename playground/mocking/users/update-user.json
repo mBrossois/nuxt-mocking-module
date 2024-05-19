@@ -1,0 +1,9 @@
+{
+    "name": "update user",
+    "route": "/api/users/update",
+    "method": "PUT",
+    "responses": [
+        "./mocks/init-succes",
+        "./mocks/init-error"
+    ]
+}

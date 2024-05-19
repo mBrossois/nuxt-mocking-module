@@ -8,7 +8,7 @@ import { mockEvent } from './runtime/event-handlers/mock'
 export interface ModuleOptions {
   isActive: boolean
   mocks: object | []
-  route: string
+  mockingRoute: string
   port: string
 }
 
@@ -20,7 +20,7 @@ export default defineNuxtModule<ModuleOptions>({
   // Default configuration options of the Nuxt module
   defaults: {
     isActive: true,
-    route: '/mocking',
+    mockingRoute: '/mocking',
     mocks: [],
     port: '3000',
   },
@@ -28,30 +28,34 @@ export default defineNuxtModule<ModuleOptions>({
     if (_options.isActive) {
       const { resolve } = createResolver(import.meta.url)
       const mocksMap = new Map<string, object[]>()
-      for (const mock of _options.mocks) {
-        mocksMap.set(`${mock.name}_${mock.method}`, mock)
-      }
+      // for (const mock of _options.mocks) {
+      //   mocksMap.set(`${mock.name}_${mock.method}`, mock)
+      // }
+
+      // console.log('mocks map', mocksMap)
+      // console.log('mocks', _options.mocks)
 
       extendPages((pages) => {
         pages.push({
           name: 'nuxt-module-mocking',
-          path: _options.route,
+          path: _options.mockingRoute,
           file: resolve('./runtime/pages/mocking-overview.vue'),
         })
       })
 
       _nuxt.options.runtimeConfig.public.mocking = defu(_nuxt.options.runtimeConfig.public.myModule, {
-        mock_route: _options.route,
+        mock_route: _options.mockingRoute,
         mock_port: _options.port,
       })
 
-      extendRouteRules(_options.route, {
-        headers: { api_route: _options.route },
+      extendRouteRules(_options.mockingRoute, {
+        headers: { api_route: _options.mockingRoute },
       })
 
       addDevServerHandler({
-        route: `${_options.route}`,
+        route: `${_options.mockingRoute}`,
         handler: eventHandler((event) => {
+          console.log('parth', event.path)
           if (event.path !== '/') return mockEvent(event, _options.mocks)
         }),
       })
@@ -59,6 +63,7 @@ export default defineNuxtModule<ModuleOptions>({
       addDevServerHandler({
         route: '/api',
         handler: eventHandler((event) => {
+          console.log('api', event.path)
           return apiEvent(event)
         }),
       })

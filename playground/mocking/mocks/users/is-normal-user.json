@@ -1,13 +1,13 @@
 {
-    "name": "init-success",
+    "name": "Normal user",
     "status": "success",
     "code": 200,
+    "isDefault": true,
     "data": {
         "id": 123,
         "name": "John Doe",
         "email": "johndoe@example.com",
         "roles": [
-            "admin",
             "user"
         ],
         "created_at": "2024-05-17T12:00:00Z",

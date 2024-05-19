@@ -1,6 +1,12 @@
 {
-    "mocks": [{
-        "groupName": "General",
-        "mockList": ["./init", "./init-post"]
-    }]
+    "mocks": [
+        {
+            "groupName": "General",
+            "mockList": ["./init", "./init-post"]
+        },
+        {
+            "groupName": "Users",
+            "mockList": ["./users/add-user", "./users/update-user", "./users/is-authorized", "./users/user", "./users/log-in"]
+        }
+    ]
 }

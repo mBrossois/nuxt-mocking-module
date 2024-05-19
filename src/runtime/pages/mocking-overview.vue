@@ -48,6 +48,7 @@ const url = 'http://localhost:'
 
 const mockRoute = useRuntimeConfig().public.mocking.mock_route
 const mockPort = useRuntimeConfig().public.mocking.mock_port
+
 const { data } = await $fetch(`${url}${mockPort}${mockRoute}/get-mocks`, { method: 'GET' })
 
 const allMocks: Array<MocksGroup> = data.all_mocks

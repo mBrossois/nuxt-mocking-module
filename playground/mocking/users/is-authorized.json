@@ -1,0 +1,9 @@
+{
+    "name": "is authorized",
+    "route": "/api/users/authorized",
+    "method": "GET",
+    "responses": [
+        "./mocks/init-succes",
+        "./mocks/init-error"
+    ]
+}

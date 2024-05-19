@@ -1,0 +1,9 @@
+{
+    "name": "login",
+    "route": "/api/users/login",
+    "method": "POST",
+    "responses": [
+        "./mocks/init-succes",
+        "./mocks/init-error"
+    ]
+}

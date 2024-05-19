@@ -1,5 +1,5 @@
 {
-    "name": "init-success",
+    "name": "Premium user",
     "status": "success",
     "code": 200,
     "data": {
@@ -7,7 +7,7 @@
         "name": "John Doe",
         "email": "johndoe@example.com",
         "roles": [
-            "admin",
+            "premium",
             "user"
         ],
         "created_at": "2024-05-17T12:00:00Z",

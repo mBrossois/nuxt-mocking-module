@@ -1,0 +1,9 @@
+{
+    "name": "Add user",
+    "route": "/api/users/add",
+    "method": "POST",
+    "responses": [
+        "./mocks/init-succes",
+        "./mocks/init-error"
+    ]
+}
