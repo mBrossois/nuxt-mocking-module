@@ -1,8 +1,7 @@
 import { setResponseStatus } from 'h3'
 
-export const apiEvent = (event) => {
-  console.log('event', event.path)
-  console.log('event', event.method)
-  setResponseStatus(event, 200, 'succes')
-  return { data: 'Not Found' }
+export const apiEvent = (event, responses) => {
+  const activeResponse = responses[`${event.method}_${event.path}`]
+  setResponseStatus(event, activeResponse.code, activeResponse.status)
+  return activeResponse.data
 }

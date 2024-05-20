@@ -1,13 +1,13 @@
 import { defineNuxtModule, addDevServerHandler, createResolver, extendPages, installModule, extendRouteRules } from '@nuxt/kit'
-import { eventHandler } from 'h3'
+import { eventHandler, readBody, setResponseStatus } from 'h3'
 import { defu } from 'defu'
 import { apiEvent } from './runtime/event-handlers/api'
-import { mockEvent } from './runtime/event-handlers/mock'
+import { mockEvent, mockResponsesEvent } from './runtime/event-handlers/mock'
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {
   isActive: boolean
-  mocks: object | []
+  mocks: []
   mockingRoute: string
   port: string
 }
@@ -27,13 +27,15 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(_options, _nuxt) {
     if (_options.isActive) {
       const { resolve } = createResolver(import.meta.url)
-      const mocksMap = new Map<string, object[]>()
-      // for (const mock of _options.mocks) {
-      //   mocksMap.set(`${mock.name}_${mock.method}`, mock)
-      // }
 
-      // console.log('mocks map', mocksMap)
-      // console.log('mocks', _options.mocks)
+      let activeResponses = {}
+      _options.mocks.forEach((mock) => {
+        activeResponses = { ...activeResponses, ...mock.mockList.reduce((map, request) => {
+          const activeResponse = request.responses.find(response => response.isDefault)
+          map[`${request.method}_${request.route}`] = activeResponse || request.responses[0]
+          return map
+        }, {}) }
+      })
 
       extendPages((pages) => {
         pages.push({
@@ -53,34 +55,39 @@ export default defineNuxtModule<ModuleOptions>({
       })
 
       addDevServerHandler({
-        route: `${_options.mockingRoute}`,
+        route: `${_options.mockingRoute}/get-mocks`,
         handler: eventHandler((event) => {
-          console.log('parth', event.path)
-          if (event.path !== '/') return mockEvent(event, _options.mocks)
+          return mockEvent(event, _options.mocks)
+        }),
+      })
+
+      addDevServerHandler({
+        route: `${_options.mockingRoute}/get-active-responses`,
+        handler: eventHandler((event) => {
+          return mockResponsesEvent(event, activeResponses)
+        }),
+      })
+
+      addDevServerHandler({
+        route: `${_options.mockingRoute}/set-active-response`,
+        handler: eventHandler(async (event) => {
+          const body = await readBody(event).catch(() => {})
+          if (body.request && body.response) {
+            activeResponses[body.request] = body.response
+            setResponseStatus(event, 200, 'succes')
+            return { message: `Set value to ${body.response.name}` }
+          }
+          setResponseStatus(event, 500, 'server-error')
+          return
         }),
       })
 
       addDevServerHandler({
         route: '/api',
         handler: eventHandler((event) => {
-          console.log('api', event.path)
-          return apiEvent(event)
+          return apiEvent(event, activeResponses)
         }),
       })
     }
   },
 })
-
-// https://github.com/nuxt-modules/robots
-// import { createResolver, defineNuxtModule, addServerHandler } from '@nuxt/kit'
-
-// export default defineNuxtModule({
-//   setup(options) {
-//     const { resolve } = createResolver(import.meta.url)
-
-//     addServerHandler({
-//       route: '/robots.txt',
-//       handler: resolve('./runtime/robots.get.ts'),
-//     })
-//   },
-// })

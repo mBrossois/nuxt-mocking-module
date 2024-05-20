@@ -1,5 +1,5 @@
 {
-    "name": "has role",
+    "name": "Get user",
     "route": "/api/users/.*/user",
     "method": "GET",
     "responses": [

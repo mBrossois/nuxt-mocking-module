@@ -8,19 +8,14 @@
       :details="request.details"
       :input="request.input"
       :dropdown="request.response"
+      @select-dropdown="updateActiveResponse"
     />
-
-    <!-- <dropdown-search
-      class="responses"
-      :dropdown-values="responseDetailsNames"
-      :active-value="responseDetailsNames[0]"
-    />
-
-    <RequestDescription
-      class="status"
-      description="status"
-      :details="response.status + ''"
-    /> -->
+    <p
+      v-if="error"
+      class="error"
+    >
+      Couldn't load default responses.
+    </p>
   </div>
 </template>
 
@@ -28,34 +23,52 @@
 import type { MockRequestDetails } from '../types/mock-list'
 import RequestDescription from './request-description.vue'
 
-import { ref, computed } from '#imports'
+import { computed, useFetch } from '#imports'
 
 interface MockingRequest {
   requestDetails: MockRequestDetails
 }
 
-const { requestDetails } = defineProps<MockingRequest>()
-const responseDetailsNames = requestDetails.responses.map(response => response.name)
-const response = ref(requestDetails.responses[0])
+const props = defineProps<MockingRequest>()
 
-const activeRequest = responseDetailsNames[0]
-const delay = computed(() => requestDetails.delay ? requestDetails.delay.toString() : '0')
+const url = 'http://localhost:'
 
-const requestLayout = [
+const mockRoute = useRuntimeConfig().public.mocking.mock_route
+const mockPort = useRuntimeConfig().public.mocking.mock_port
+
+const { data, error, refresh } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-responses`)
+
+const responseDetailsNames = computed(() => props.requestDetails.responses.map(response => response.name))
+const response = computed(() => data.value.active_responses[`${props.requestDetails.method}_${props.requestDetails.route}`])
+
+const delay = computed(() => props.requestDetails.delay ? props.requestDetails.delay.toString() : '0')
+
+async function updateActiveResponse(value: string) {
+  const response = await $fetch(`${url}${mockPort}${mockRoute}/set-active-response`,
+    {
+      method: 'PUT',
+      body: { request: `${props.requestDetails.method}_${props.requestDetails.route}`, response: props.requestDetails.responses.find(response => response.name === value) },
+    })
+  if (response) {
+    refresh()
+  }
+}
+
+const requestLayout = computed(() => [
   {
     class: 'name',
     description: 'Name',
-    details: requestDetails.name,
+    details: props.requestDetails.name,
   },
   {
     class: 'method',
     description: 'Method',
-    details: requestDetails.method,
+    details: props.requestDetails.method,
   },
   {
     class: 'route',
     description: 'Route',
-    details: requestDetails.route,
+    details: props.requestDetails.route,
   },
   {
     class: 'delay',
@@ -69,8 +82,8 @@ const requestLayout = [
     class: 'responses',
     description: 'Responses',
     response: {
-      dropdownValues: responseDetailsNames,
-      activeValue: activeRequest,
+      dropdownValues: responseDetailsNames.value,
+      activeValue: response.value.name,
       componentTextType: 'p',
     },
   },
@@ -79,7 +92,7 @@ const requestLayout = [
     description: 'Status',
     details: response.value.status.toString(),
   },
-]
+])
 </script>
 
 <style scoped>
@@ -121,5 +134,10 @@ const requestLayout = [
 .status {
     grid-column: 1;
     grid-row: 5;
+}
+.error {
+  color: red;
+  grid-column: 1/4;
+  grid-row: 6;
 }
 </style>

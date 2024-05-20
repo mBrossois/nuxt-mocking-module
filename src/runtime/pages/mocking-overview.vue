@@ -7,8 +7,9 @@
         </p>
         <dropdown-search
           :dropdown-values="headerTitles"
-          :active-value="headerTitles[0]"
+          :active-value="activeGroup"
           component-text-type="h1"
+          @select="updateGroup"
         />
       </div>
       <div class="search-box card-layout">
@@ -19,7 +20,7 @@
           Requests
         </h2>
         <request-block
-          :requests="mappedRequests[headerTitles[0]]"
+          :requests="mappedRequests[activeGroup]"
           :active-request="activeRequest.name"
           @on-click="setActiveRequest"
         />
@@ -28,7 +29,9 @@
         <h2 class="text sub-title">
           Request details
         </h2>
-        <request-details-block :request-details="activeRequest" />
+        <request-details-block
+          :request-details="activeRequest"
+        />
       </div>
     </div>
   </div>
@@ -42,28 +45,39 @@ import SearchBlock from '../components/search-block.vue'
 import requestBlock from '../components/request-block.vue'
 import requestDetailsBlock from '../components/request-details-block.vue'
 
-import { useRuntimeConfig, ref } from '#imports'
+import { useRuntimeConfig, ref, useFetch } from '#imports'
 
 const url = 'http://localhost:'
 
 const mockRoute = useRuntimeConfig().public.mocking.mock_route
 const mockPort = useRuntimeConfig().public.mocking.mock_port
 
-const { data } = await $fetch(`${url}${mockPort}${mockRoute}/get-mocks`, { method: 'GET' })
+const { data, error } = await useFetch(`${url}${mockPort}${mockRoute}/get-mocks`)
 
-const allMocks: Array<MocksGroup> = data.all_mocks
+if (error.value) {
+  console.log('error', error)
+}
 
-const headerTitles = allMocks.map(data => data.groupName)
+const allMocks: Array<MocksGroup> = data.value as Array<MocksGroup>
+
+const headerTitles = allMocks.map(mocks => mocks.groupName)
+
+const activeGroup = ref(headerTitles[0])
 
 const mappedRequests = allMocks.reduce((map, mocksList) => {
   map[mocksList.groupName] = mocksList.mockList
   return map
 }, {})
 
-const activeRequest = ref(mappedRequests[headerTitles[0]][0])
+const activeRequest = ref(mappedRequests[activeGroup.value][0])
 
 function setActiveRequest(request: MockRequestDetails) {
   activeRequest.value = request
+}
+
+function updateGroup(groupName: string) {
+  activeGroup.value = groupName
+  setActiveRequest(mappedRequests[activeGroup.value][0])
 }
 </script>
 

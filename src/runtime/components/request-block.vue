@@ -1,14 +1,16 @@
 <template>
-  <div class="requests flex-column">
-    <button
-      v-for="request of requests"
-      :key="request.name"
-      class="default-font default-font-size"
-      :class="activeClass(request.name)"
-      @click="emits('onClick', request)"
-    >
-      {{ request.name }}
-    </button>
+  <div class="requests">
+    <div class="flex-column">
+      <button
+        v-for="request of requests"
+        :key="request.name"
+        class="default-font default-font-size"
+        :class="activeClass(request.name)"
+        @click="emits('onClick', request)"
+      >
+        {{ request.name }}
+      </button>
+    </div>
   </div>
 </template>
 

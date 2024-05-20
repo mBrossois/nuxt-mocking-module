@@ -8,7 +8,7 @@
         :is="componentTextType"
         class="text flex align-center"
       >
-        {{ activeDropdown }}
+        {{ activeValue }}
         <chevron-icon
           :size="size"
           :orientation="orientation"
@@ -63,9 +63,10 @@ import { computed, nextTick, onUnmounted, ref } from '#imports'
 
 const props = defineProps<Dropdown>()
 
+const emit = defineEmits(['select'])
+
 const isOpen = ref(false)
 const searchInput = ref()
-const activeDropdown = ref(props.activeValue)
 
 const orientation = computed(() => isOpen.value ? 'up' : 'down')
 
@@ -74,7 +75,7 @@ const dropdownCss = computed(() => isOpen.value ? 'open' : 'closed')
 const size = computed(() => props.componentTextType === 'p' ? 'small' : 'big')
 
 function selectedClass(value: string) {
-  return activeDropdown.value === value ? 'active' : ''
+  return props.activeValue === value ? 'active' : ''
 }
 
 function onToggle() {
@@ -92,7 +93,7 @@ function onKeyUp() {
 }
 
 function onSelect(value: string) {
-  activeDropdown.value = value
+  emit('select', value)
   closeDropdown()
 }
 

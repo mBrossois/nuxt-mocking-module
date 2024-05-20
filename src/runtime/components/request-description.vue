@@ -19,6 +19,7 @@
       :dropdown-values="dropdown.dropdownValues"
       :active-value="dropdown.activeValue"
       :component-text-type="dropdown.componentTextType"
+      @select="onSelect"
     />
   </div>
 </template>
@@ -37,4 +38,9 @@ interface props {
 }
 
 defineProps<props>()
+const emit = defineEmits(['selectDropdown'])
+
+function onSelect(value: string) {
+  emit('selectDropdown', value)
+}
 </script>

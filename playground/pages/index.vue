@@ -13,7 +13,12 @@
 <script setup lang="ts">
 const user = ref('')
 async function onClick() {
-  const { data } = await $fetch('/api/init', { method: 'GET' })
-  user.value = data
+  try {
+    const response = await $fetch('/api/init', { method: 'GET' })
+    user.value = response.name
+  }
+  catch (e) {
+    user.value = e.response.statusText
+  }
 }
 </script>
