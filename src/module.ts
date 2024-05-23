@@ -87,7 +87,7 @@ export default defineNuxtModule<ModuleOptions>({
         addDevServerHandler({
           route: apiRoute,
           handler: eventHandler((event) => {
-            return apiEvent(event, activeResponses)
+            return apiEvent(event, apiRoute, activeResponses)
           }),
         })
       }
