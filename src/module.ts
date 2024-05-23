@@ -7,9 +7,9 @@ import { mockEvent, mockResponsesEvent } from './runtime/event-handlers/mock'
 // Module options TypeScript interface definition
 export interface ModuleOptions {
   isActive: boolean
+  apiRoutes: string[]
   mocks: []
   mockingRoute: string
-  apiRoutes: string[]
   port: string
 }
 
@@ -21,6 +21,7 @@ export default defineNuxtModule<ModuleOptions>({
   // Default configuration options of the Nuxt module
   defaults: {
     isActive: true,
+    apiRoutes: ['/api'],
     mockingRoute: '/mocking',
     mocks: [],
     port: '3000',
@@ -55,6 +56,7 @@ export default defineNuxtModule<ModuleOptions>({
         headers: { api_route: _options.mockingRoute },
       })
 
+      // Handles Mocking api requests
       addDevServerHandler({
         route: `${_options.mockingRoute}/get-mocks`,
         handler: eventHandler((event) => {
@@ -83,7 +85,8 @@ export default defineNuxtModule<ModuleOptions>({
         }),
       })
 
-      for(const apiRoute of apiRoutes) {
+      // Handles all api requests made to mocking module.
+      for(const apiRoute of _options.apiRoutes) {
         addDevServerHandler({
           route: apiRoute,
           handler: eventHandler((event) => {
