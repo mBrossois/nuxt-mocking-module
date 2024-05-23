@@ -9,6 +9,7 @@ export interface ModuleOptions {
   isActive: boolean
   mocks: []
   mockingRoute: string
+  apiRoutes: string[]
   port: string
 }
 
@@ -82,12 +83,15 @@ export default defineNuxtModule<ModuleOptions>({
         }),
       })
 
-      addDevServerHandler({
-        route: '/api',
-        handler: eventHandler((event) => {
-          return apiEvent(event, activeResponses)
-        }),
-      })
+      for(const apiRoute of apiRoutes) {
+        addDevServerHandler({
+          route: apiRoute,
+          handler: eventHandler((event) => {
+            return apiEvent(event, activeResponses)
+          }),
+        })
+      }
+
     }
   },
 })

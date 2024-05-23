@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     isActive: true,
     mocks: getMocks(),
     port: '3000',
+    apiRoutes: ['/api']
   },
   devtools: { enabled: true },
 })
