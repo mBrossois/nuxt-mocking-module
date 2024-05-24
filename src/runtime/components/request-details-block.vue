@@ -9,6 +9,7 @@
       :input="request.input"
       :dropdown="request.response"
       @select-dropdown="updateActiveResponse"
+      @update-input="updateDelay"
     />
     <p
       v-if="error"
@@ -41,7 +42,7 @@ const { data, error, refresh } = await useFetch(`${url}${mockPort}${mockRoute}/g
 const responseDetailsNames = computed(() => props.requestDetails.responses.map(response => response.name))
 const response = computed(() => data.value.active_responses[`${props.requestDetails.method}_${props.requestDetails.route}`])
 
-const delay = computed(() => props.requestDetails.delay ? props.requestDetails.delay.toString() : '0')
+const delay = computed(() => response.value.delay ? response.value.delay.toString() : '0')
 
 async function updateActiveResponse(value: string) {
   const response = await $fetch(`${url}${mockPort}${mockRoute}/set-active-response`,
@@ -51,6 +52,19 @@ async function updateActiveResponse(value: string) {
     })
   if (response) {
     refresh()
+  }
+}
+
+async function updateDelay(delay: string) {
+  try {
+    await $fetch(`${url}${mockPort}${mockRoute}/set-delay`,
+      {
+        method: 'PUT',
+        body: { request: `${props.requestDetails.method}_${props.requestDetails.route}`, delay: delay },
+      })
+  }
+  catch (e) {
+    console.error('something went wrong')
   }
 }
 

@@ -85,8 +85,22 @@ export default defineNuxtModule<ModuleOptions>({
         }),
       })
 
+      addDevServerHandler({
+        route: `${_options.mockingRoute}/set-delay`,
+        handler: eventHandler(async (event) => {
+          const body = await readBody(event).catch(() => {})
+          if (body.request && body.delay) {
+            activeResponses[body.request].delay = body.delay
+            setResponseStatus(event, 200, 'succes')
+            return { message: `Set value to ${body.delay}` }
+          }
+          setResponseStatus(event, 500, 'server-error')
+          return
+        }),
+      })
+
       // Handles all api requests made to mocking module.
-      for(const apiRoute of _options.apiRoutes) {
+      for (const apiRoute of _options.apiRoutes) {
         addDevServerHandler({
           route: apiRoute,
           handler: eventHandler((event) => {
@@ -94,7 +108,6 @@ export default defineNuxtModule<ModuleOptions>({
           }),
         })
       }
-
     }
   },
 })
