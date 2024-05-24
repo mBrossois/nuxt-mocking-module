@@ -1,6 +1,6 @@
 {
     "name": "init",
-    "route": "/init",
+    "route": "/api/init",
     "method": "GET",
     "delay": 100,
     "responses": [
