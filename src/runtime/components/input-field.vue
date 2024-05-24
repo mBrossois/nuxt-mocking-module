@@ -5,21 +5,37 @@
       src="../assets/svg/search-icon.svg"
     >
     <input
+      ref="input"
       class="default-font default-font-size"
       :type="inputType"
       :value="inputValue"
       :placeholder="placeholder"
+      @input="onInput"
     >
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, type Ref } from '#imports'
+
 defineProps({
   isSearch: Boolean,
   inputType: String,
   inputValue: String,
   placeholder: String,
 })
+
+interface Input extends HTMLElement {
+  value: string
+}
+
+const input: Ref<Input | undefined > = ref()
+
+const emit = defineEmits({ inputValue: String })
+
+function onInput() {
+  if (input.value) emit('inputValue', input.value.value)
+}
 </script>
 
 <style scoped>

@@ -12,6 +12,7 @@
       v-if="input"
       :input-value="input.value"
       :input-type="input.type"
+      @input-value="onInput"
     />
 
     <dropdown-search
@@ -38,9 +39,13 @@ interface props {
 }
 
 defineProps<props>()
-const emit = defineEmits(['selectDropdown'])
+const emit = defineEmits({ selectDropdown: String, updateInput: String })
 
 function onSelect(value: string) {
   emit('selectDropdown', value)
+}
+
+function onInput(value: string) {
+  emit('updateInput', value)
 }
 </script>

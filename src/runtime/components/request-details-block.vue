@@ -9,6 +9,7 @@
       :input="request.input"
       :dropdown="request.response"
       @select-dropdown="updateActiveResponse"
+      @update-input="updateDelay"
     />
     <p
       v-if="error"
@@ -51,6 +52,19 @@ async function updateActiveResponse(value: string) {
     })
   if (response) {
     refresh()
+  }
+}
+
+async function updateDelay(delay: string) {
+  try {
+    await $fetch(`${url}${mockPort}${mockRoute}/set-delay`,
+      {
+        method: 'PUT',
+        body: { request: `${props.requestDetails.method}_${props.requestDetails.route}`, delay: delay },
+      })
+  }
+  catch (e) {
+    console.error('something went wrong')
   }
 }
 
