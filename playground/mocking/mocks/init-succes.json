@@ -2,6 +2,7 @@
     "name": "init-success",
     "status": "success",
     "code": 200,
+    "delay": 500,
     "data": {
         "id": 123,
         "name": "John Doe",
