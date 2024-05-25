@@ -21,7 +21,7 @@
         </h2>
         <request-block
           :requests="mappedRequests[groupName]"
-          :active-request="activeRequest.name"
+          :active-request="activeRequestName"
           @on-click="setActiveRequest"
         />
       </div>
@@ -46,7 +46,7 @@ import SearchBlock from '../components/search-block.vue'
 import requestBlock from '../components/request-block.vue'
 import requestDetailsBlock from '../components/request-details-block.vue'
 
-import { useRuntimeConfig, useFetch, ref, computed } from '#imports'
+import { useRuntimeConfig, useFetch, computed, type Ref } from '#imports'
 
 const url = 'http://localhost:'
 
@@ -56,7 +56,7 @@ const mockPort = useRuntimeConfig().public.mocking.mock_port
 // These are set in the nuxt module for state management
 const { data: allMocksData, error: allMocksError, refresh: refreshAllMocks } = await useFetch(`${url}${mockPort}${mockRoute}/get-mocks`)
 const { data: groupName, refresh: refreshGroupName } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-group`)
-const { data: activeRequest, refresh: refreshActiveRequest } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-request`)
+const { data: activeRequestName, refresh: refreshActiveRequest } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-request`)
 
 if (allMocksError.value) {
   console.log('error', error)
@@ -71,12 +71,13 @@ const mappedRequests = computed(() => allMocksData.value.reduce((map, mocksList)
   return map
 }, {}))
 
+const activeRequest: Ref<MockRequestDetails> = computed(() => mappedRequests.value[groupName.value].find(request => request.name === activeRequestName.value) ?? { name: '...', route: '...', method: '...', responses: [{}] })
+
 function onDelayUpdate() {
-  refreshActiveRequest()
   refreshAllMocks()
 }
 
-async function setActiveRequest(request: MockRequestDetails) {
+async function setActiveRequest(request: string) {
   const data = await $fetch(`${url}${mockPort}${mockRoute}/set-active-request`,
     {
       method: 'PUT',
@@ -95,7 +96,7 @@ async function updateGroup(newGroup: string) {
     })
   if (data) {
     refreshGroupName()
-    setActiveRequest(mappedRequests.value[newGroup][0])
+    setActiveRequest(mappedRequests.value[newGroup][0].name)
   }
 }
 </script>

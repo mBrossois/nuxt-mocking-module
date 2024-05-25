@@ -12,7 +12,6 @@
       @update-input="updateDelay"
     />
 
-    {{ responses }}
     <p
       v-if="error"
       class="error"
@@ -45,7 +44,7 @@ const mockPort = useRuntimeConfig().public.mocking.mock_port
 const { data, error, refresh } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-responses`)
 
 const responseDetailsNames = computed(() => responses.value.map(response => response.name))
-const activeResponse = computed(() => data.value.active_responses[`${props.requestDetails.method}_${props.requestDetails.route}`])
+const activeResponse = computed(() => data.value.active_responses[`${props.requestDetails.method}_${props.requestDetails.route}`] ?? { status: '...', name: '...' })
 
 const delay = computed(() => activeResponse.value.delay ? activeResponse.value.delay.toString() : '0')
 

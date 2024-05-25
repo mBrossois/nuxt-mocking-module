@@ -6,7 +6,7 @@
         :key="request.name"
         class="default-font default-font-size"
         :class="activeClass(request.name)"
-        @click="emits('onClick', request)"
+        @click="emits('onClick', request.name)"
       >
         {{ request.name }}
       </button>

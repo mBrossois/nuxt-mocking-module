@@ -43,7 +43,7 @@ export default defineNuxtModule<ModuleOptions>({
 
       let activeGroup = allmocks[0].groupName
 
-      let activeRequest = allmocks[0].requests[0]
+      let activeRequest = allmocks[0].requests[0].name
 
       extendPages((pages) => {
         pages.push({
@@ -138,10 +138,9 @@ export default defineNuxtModule<ModuleOptions>({
           if (body.request && body.delay) {
             try {
               const groupId = allmocks.findIndex(mockGroup => mockGroup.groupName === activeGroup)
-              const requestId = allmocks[groupId].requests.findIndex(request => request.name === activeRequest.name)
+              const requestId = allmocks[groupId].requests.findIndex(request => request.name === activeRequest)
               const responseId = allmocks[groupId].requests[requestId].responses.findIndex(response => response.name === activeResponses[body.request].name)
               allmocks[groupId].requests[requestId].responses[responseId].delay = body.delay
-              activeRequest.responses[responseId].delay = body.delay
             }
             catch (e) {
               console.log('Could not set delay on global mocks item')
