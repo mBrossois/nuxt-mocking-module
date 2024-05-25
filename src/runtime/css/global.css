@@ -43,3 +43,7 @@ body:has( div > #mocking-body) {
 #mocking-body .bold {
     font-weight: bold;
 }
+
+#mocking-body .error-message {
+    color: var(--analogus-first);
+}
