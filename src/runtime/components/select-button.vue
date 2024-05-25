@@ -4,23 +4,22 @@
     :class="selectedClass"
     @click="onToggleSelect"
   >
-    {{ text }}
+    {{ value }}
   </button>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from '#imports'
+import type { Filters } from '../types/search'
+import { computed } from '#imports'
 
-defineProps({
-  text: String,
-})
+const props = defineProps< Filters >()
 
-const isSelected = ref(false)
+const emit = defineEmits<{ (e: 'onClick', value: string): void }>()
 
-const selectedClass = computed(() => isSelected.value ? 'active' : '')
+const selectedClass = computed(() => props.selected ? 'active' : '')
 
 function onToggleSelect() {
-  isSelected.value = !isSelected.value
+  emit('onClick', props.value)
 }
 </script>
 
