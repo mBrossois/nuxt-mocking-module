@@ -30,14 +30,20 @@ export default defineNuxtModule<ModuleOptions>({
     if (_options.isActive) {
       const { resolve } = createResolver(import.meta.url)
 
+      const allmocks = _options.mocks
+
       let activeResponses = {}
-      _options.mocks.forEach((mock) => {
-        activeResponses = { ...activeResponses, ...mock.mockList.reduce((map, request) => {
+      allmocks.forEach((mock) => {
+        activeResponses = { ...activeResponses, ...mock.requests.reduce((map, request) => {
           const activeResponse = request.responses.find(response => response.isDefault)
           map[`${request.method}_${request.route}`] = activeResponse || request.responses[0]
           return map
         }, {}) }
       })
+
+      let activeGroup = allmocks[0].groupName
+
+      let activeRequest = allmocks[0].requests[0].name
 
       extendPages((pages) => {
         pages.push({
@@ -60,7 +66,47 @@ export default defineNuxtModule<ModuleOptions>({
       addDevServerHandler({
         route: `${_options.mockingRoute}/get-mocks`,
         handler: eventHandler((event) => {
-          return mockEvent(event, _options.mocks)
+          return mockEvent(event, allmocks)
+        }),
+      })
+
+      addDevServerHandler({
+        route: `${_options.mockingRoute}/get-active-group`,
+        handler: eventHandler((event) => {
+          setResponseStatus(event, 200, 'succes')
+          return activeGroup
+        }),
+      })
+
+      addDevServerHandler({
+        route: `${_options.mockingRoute}/set-active-group`,
+        handler: eventHandler(async (event) => {
+          const body = await readBody(event).catch(() => {})
+          if (body.groupName) {
+            activeGroup = body.groupName
+            setResponseStatus(event, 200, 'succes')
+            return activeGroup
+          }
+        }),
+      })
+
+      addDevServerHandler({
+        route: `${_options.mockingRoute}/get-active-request`,
+        handler: eventHandler((event) => {
+          setResponseStatus(event, 200, 'succes')
+          return activeRequest
+        }),
+      })
+
+      addDevServerHandler({
+        route: `${_options.mockingRoute}/set-active-request`,
+        handler: eventHandler(async (event) => {
+          const body = await readBody(event).catch(() => {})
+          if (body.request) {
+            activeRequest = body.request
+            setResponseStatus(event, 200, 'succes')
+            return 'success'
+          }
         }),
       })
 
@@ -90,6 +136,15 @@ export default defineNuxtModule<ModuleOptions>({
         handler: eventHandler(async (event) => {
           const body = await readBody(event).catch(() => {})
           if (body.request && body.delay) {
+            try {
+              const groupId = allmocks.findIndex(mockGroup => mockGroup.groupName === activeGroup)
+              const requestId = allmocks[groupId].requests.findIndex(request => request.name === activeRequest)
+              const responseId = allmocks[groupId].requests[requestId].responses.findIndex(response => response.name === activeResponses[body.request].name)
+              allmocks[groupId].requests[requestId].responses[responseId].delay = body.delay
+            }
+            catch (e) {
+              console.log('Could not set delay on global mocks item')
+            }
             activeResponses[body.request].delay = body.delay
             setResponseStatus(event, 200, 'succes')
             return { message: `Set value to ${body.delay}` }

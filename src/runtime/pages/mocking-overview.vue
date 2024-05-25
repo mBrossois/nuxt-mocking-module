@@ -7,7 +7,7 @@
         </p>
         <dropdown-search
           :dropdown-values="headerTitles"
-          :active-value="activeGroup"
+          :active-value="groupName"
           component-text-type="h1"
           @select="updateGroup"
         />
@@ -20,8 +20,8 @@
           Requests
         </h2>
         <request-block
-          :requests="mappedRequests[activeGroup]"
-          :active-request="activeRequest.name"
+          :requests="mappedRequests[groupName]"
+          :active-request="activeRequestName"
           @on-click="setActiveRequest"
         />
       </div>
@@ -31,6 +31,7 @@
         </h2>
         <request-details-block
           :request-details="activeRequest"
+          @update-delay="onDelayUpdate"
         />
       </div>
     </div>
@@ -45,39 +46,58 @@ import SearchBlock from '../components/search-block.vue'
 import requestBlock from '../components/request-block.vue'
 import requestDetailsBlock from '../components/request-details-block.vue'
 
-import { useRuntimeConfig, ref, useFetch } from '#imports'
+import { useRuntimeConfig, useFetch, computed, type Ref } from '#imports'
 
 const url = 'http://localhost:'
 
 const mockRoute = useRuntimeConfig().public.mocking.mock_route
 const mockPort = useRuntimeConfig().public.mocking.mock_port
 
-const { data, error } = await useFetch(`${url}${mockPort}${mockRoute}/get-mocks`)
+// These are set in the nuxt module for state management
+const { data: allMocksData, error: allMocksError, refresh: refreshAllMocks } = await useFetch(`${url}${mockPort}${mockRoute}/get-mocks`)
+const { data: groupName, refresh: refreshGroupName } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-group`)
+const { data: activeRequestName, refresh: refreshActiveRequest } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-request`)
 
-if (error.value) {
+if (allMocksError.value) {
   console.log('error', error)
 }
 
-const allMocks: Array<MocksGroup> = data.value as Array<MocksGroup>
+const allMocks: Array<MocksGroup> = allMocksData.value as Array<MocksGroup>
 
 const headerTitles = allMocks.map(mocks => mocks.groupName)
 
-const activeGroup = ref(headerTitles[0])
-
-const mappedRequests = allMocks.reduce((map, mocksList) => {
-  map[mocksList.groupName] = mocksList.mockList
+const mappedRequests = computed(() => allMocksData.value.reduce((map, mocksList) => {
+  map[mocksList.groupName] = mocksList.requests
   return map
-}, {})
+}, {}))
 
-const activeRequest = ref(mappedRequests[activeGroup.value][0])
+const activeRequest: Ref<MockRequestDetails> = computed(() => mappedRequests.value[groupName.value].find(request => request.name === activeRequestName.value) ?? { name: '...', route: '...', method: '...', responses: [{}] })
 
-function setActiveRequest(request: MockRequestDetails) {
-  activeRequest.value = request
+function onDelayUpdate() {
+  refreshAllMocks()
 }
 
-function updateGroup(groupName: string) {
-  activeGroup.value = groupName
-  setActiveRequest(mappedRequests[activeGroup.value][0])
+async function setActiveRequest(request: string) {
+  const data = await $fetch(`${url}${mockPort}${mockRoute}/set-active-request`,
+    {
+      method: 'PUT',
+      body: { request },
+    })
+  if (data) {
+    refreshActiveRequest()
+  }
+}
+
+async function updateGroup(newGroup: string) {
+  const data = await $fetch(`${url}${mockPort}${mockRoute}/set-active-group`,
+    {
+      method: 'PUT',
+      body: { groupName: newGroup },
+    })
+  if (data) {
+    refreshGroupName()
+    setActiveRequest(mappedRequests.value[newGroup][0].name)
+  }
 }
 </script>
 

@@ -4,20 +4,20 @@ export type Mocks = {
 
 export type MocksGroup = {
   groupName: string
-  mockList: Array<MockRequestDetails>
+  requests: Array<MockRequestDetails>
 }
 
 export type MockRequestDetails = {
   name: string
   route: string
   method: string
-  delay?: string
   responses: Array<MockResponses>
 }
 
 export type MockResponses = {
   name: string
   status: number
+  delay?: string
   body: object
 }
 

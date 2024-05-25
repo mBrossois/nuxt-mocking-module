@@ -11,6 +11,7 @@
       @select-dropdown="updateActiveResponse"
       @update-input="updateDelay"
     />
+
     <p
       v-if="error"
       class="error"
@@ -31,6 +32,9 @@ interface MockingRequest {
 }
 
 const props = defineProps<MockingRequest>()
+const emit = defineEmits(['updateDelay'])
+
+const responses = computed(() => props.requestDetails.responses)
 
 const url = 'http://localhost:'
 
@@ -39,29 +43,34 @@ const mockPort = useRuntimeConfig().public.mocking.mock_port
 
 const { data, error, refresh } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-responses`)
 
-const responseDetailsNames = computed(() => props.requestDetails.responses.map(response => response.name))
-const response = computed(() => data.value.active_responses[`${props.requestDetails.method}_${props.requestDetails.route}`])
+const responseDetailsNames = computed(() => responses.value.map(response => response.name))
+const activeResponse = computed(() => data.value.active_responses[`${props.requestDetails.method}_${props.requestDetails.route}`] ?? { status: '...', name: '...' })
 
-const delay = computed(() => response.value.delay ? response.value.delay.toString() : '0')
+const delay = computed(() => activeResponse.value.delay ? activeResponse.value.delay.toString() : '0')
 
 async function updateActiveResponse(value: string) {
-  const response = await $fetch(`${url}${mockPort}${mockRoute}/set-active-response`,
+  const data = await $fetch(`${url}${mockPort}${mockRoute}/set-active-response`,
     {
       method: 'PUT',
-      body: { request: `${props.requestDetails.method}_${props.requestDetails.route}`, response: props.requestDetails.responses.find(response => response.name === value) },
+      body: { request: `${props.requestDetails.method}_${props.requestDetails.route}`, response: responses.value.find(response => response.name === value) },
     })
-  if (response) {
+  if (data) {
     refresh()
   }
 }
 
 async function updateDelay(delay: string) {
   try {
-    await $fetch(`${url}${mockPort}${mockRoute}/set-delay`,
+    const selectedResponse = responses.value.find(response => response.name === activeResponse.value.name)
+    const data = await $fetch(`${url}${mockPort}${mockRoute}/set-delay`,
       {
         method: 'PUT',
         body: { request: `${props.requestDetails.method}_${props.requestDetails.route}`, delay: delay },
       })
+    if (data && selectedResponse) {
+      refresh()
+      emit('updateDelay')
+    }
   }
   catch (e) {
     console.error('something went wrong')
@@ -97,14 +106,14 @@ const requestLayout = computed(() => [
     description: 'Responses',
     response: {
       dropdownValues: responseDetailsNames.value,
-      activeValue: response.value.name,
+      activeValue: activeResponse.value.name,
       componentTextType: 'p',
     },
   },
   {
     class: 'status',
     description: 'Status',
-    details: response.value.status.toString(),
+    details: activeResponse.value.status.toString(),
   },
 ])
 </script>
