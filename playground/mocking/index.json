@@ -2,11 +2,11 @@
     "mocks": [
         {
             "groupName": "General",
-            "mockList": ["./init", "./init-post"]
+            "requests": ["./init", "./init-post"]
         },
         {
             "groupName": "Users",
-            "mockList": ["./users/add-user", "./users/update-user", "./users/is-authorized", "./users/user", "./users/log-in"]
+            "requests": ["./users/add-user", "./users/update-user", "./users/is-authorized", "./users/user", "./users/log-in"]
         }
     ]
 }
