@@ -11,6 +11,12 @@
         {{ request.name }}
       </button>
     </div>
+    <p
+      v-if="showEmptyList"
+      class="error-message default-font"
+    >
+      No requests to be shown...
+    </p>
   </div>
 </template>
 
@@ -22,6 +28,8 @@ const props = defineProps({
   activeRequest: String,
 })
 
+const showEmptyList = computed(() => !props.requests || props.requests.length === 0)
+
 function activeClass(request: string) {
   return props.activeRequest === request ? 'active' : ''
 }
@@ -30,7 +38,7 @@ const emits = defineEmits({ onClick: {} })
 </script>
 
 <style scoped>
-.requests {
+.requests >:not(p.error-message) {
   border-radius: 5px;
   margin-top: .5rem;
   box-shadow: 1px 1px 4px 0px #0006;

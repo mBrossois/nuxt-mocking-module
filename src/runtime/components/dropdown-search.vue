@@ -26,7 +26,7 @@
       <div class="search-block">
         <input
           id="searchInput"
-          ref="searchInput"
+          v-model="searchInput"
           type="text"
           placeholder="Search..."
           @keyup="onKeyUp"
@@ -39,7 +39,7 @@
       </div>
 
       <button
-        v-for="dropdownValue in dropdownValues"
+        v-for="dropdownValue in listValues"
         :key="dropdownValue"
         :class="selectedClass(dropdownValue)"
         @click="onSelect(dropdownValue)"
@@ -52,21 +52,35 @@
         />
         {{ dropdownValue }}
       </button>
+
+      <p
+        v-if="showEmptyList"
+        class="error-message default-font"
+      >
+        We couldn't find any result for the search value...
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Dropdown } from '../types/dropdown'
+import { search } from '../utils/search'
 import chevronIcon from './chevron-icon.vue'
-import { computed, nextTick, onUnmounted, ref } from '#imports'
+import { computed, nextTick, onUnmounted, ref, type Ref } from '#imports'
 
 const props = defineProps<Dropdown>()
 
 const emit = defineEmits(['select'])
 
 const isOpen = ref(false)
-const searchInput = ref()
+const searchInput = ref('')
+
+const listValues = computed(() => searchInput.value !== '' ? filteredList.value : props.dropdownValues)
+
+const showEmptyList = computed(() => listValues.value.length === 0)
+
+const filteredList: Ref<Array<string>> = ref([])
 
 const orientation = computed(() => isOpen.value ? 'up' : 'down')
 
@@ -89,7 +103,7 @@ function onToggle() {
 }
 
 function onKeyUp() {
-  console.log('click')
+  filteredList.value = search(props.dropdownValues, searchInput.value)
 }
 
 function onSelect(value: string) {
@@ -100,7 +114,7 @@ function onSelect(value: string) {
 function closeDropdown() {
   isOpen.value = false
   document.removeEventListener('click', closeDropdown)
-  setTimeout(() => searchInput.value.value = null, 200)
+  setTimeout(() => searchInput.value = '', 200)
 }
 
 onUnmounted(() => {
@@ -213,5 +227,11 @@ onUnmounted(() => {
   opacity: 1;
   overflow: scroll;
   transition: max-height 200ms ease-in-out, opacity 200ms linear 1ms;
+}
+
+.error-message {
+  padding: 0 1rem;
+  box-sizing: border-box;
+  max-width: 16rem;
 }
 </style>
