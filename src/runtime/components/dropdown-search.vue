@@ -225,7 +225,7 @@ onUnmounted(() => {
 .open {
   max-height: 10rem;
   opacity: 1;
-  overflow: scroll;
+  overflow-y: auto;
   transition: max-height 200ms ease-in-out, opacity 200ms linear 1ms;
 }
 
