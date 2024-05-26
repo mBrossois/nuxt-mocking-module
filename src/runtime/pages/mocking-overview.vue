@@ -13,14 +13,14 @@
         />
       </div>
       <div class="search-box card-layout">
-        <search-block />
+        <search-block @on-search="filterRequests" />
       </div>
       <div class="requests-list-box card-layout">
         <h2 class="text sub-title">
           Requests
         </h2>
         <request-block
-          :requests="mappedRequests[groupName]"
+          :requests="requestsShown"
           :active-request="activeRequestName"
           @on-click="setActiveRequest"
         />
@@ -46,7 +46,9 @@ import SearchBlock from '../components/search-block.vue'
 import requestBlock from '../components/request-block.vue'
 import requestDetailsBlock from '../components/request-details-block.vue'
 
-import { useRuntimeConfig, useFetch, computed, type Ref } from '#imports'
+import type { Search } from '../types/search'
+import { searchRequests } from '../utils/search'
+import { useRuntimeConfig, useFetch, computed, type Ref, ref, type ComputedRef } from '#imports'
 
 const url = 'http://localhost:'
 
@@ -55,7 +57,7 @@ const mockPort = useRuntimeConfig().public.mocking.mock_port
 
 // These are set in the nuxt module for state management
 const { data: allMocksData, error: allMocksError, refresh: refreshAllMocks } = await useFetch(`${url}${mockPort}${mockRoute}/get-mocks`)
-const { data: groupName, refresh: refreshGroupName } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-group`)
+const { data: groupName, refresh: refreshGroupName } = await useFetch<string>(`${url}${mockPort}${mockRoute}/get-active-group`)
 const { data: activeRequestName, refresh: refreshActiveRequest } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-request`)
 
 if (allMocksError.value) {
@@ -66,12 +68,16 @@ const allMocks: Array<MocksGroup> = allMocksData.value as Array<MocksGroup>
 
 const headerTitles = allMocks.map(mocks => mocks.groupName)
 
-const mappedRequests = computed(() => allMocksData.value.reduce((map, mocksList) => {
+const mappedRequests: ComputedRef<{ [key: string]: MockRequestDetails }> = computed(() => allMocksData.value.reduce((map, mocksList) => {
   map[mocksList.groupName] = mocksList.requests
   return map
 }, {}))
 
+const requestsShown = computed(() => searchRequests(mappedRequests.value[groupName.value ?? ''], search.value))
+
 const activeRequest: Ref<MockRequestDetails> = computed(() => mappedRequests.value[groupName.value].find(request => request.name === activeRequestName.value) ?? { name: '...', route: '...', method: '...', responses: [{}] })
+
+const search = ref()
 
 function onDelayUpdate() {
   refreshAllMocks()
@@ -99,6 +105,10 @@ async function updateGroup(newGroup: string) {
     setActiveRequest(mappedRequests.value[newGroup][0].name)
   }
 }
+
+function filterRequests(searchValue: Search) {
+  search.value = searchValue
+}
 </script>
 
 <style>
@@ -117,7 +127,7 @@ async function updateGroup(newGroup: string) {
 
 <style scoped>
 #mocking-body {
-  padding: 4rem;
+  padding: 4rem 0;
   box-sizing: border-box;
   width: 100%;
   height: 100%;

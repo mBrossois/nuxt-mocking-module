@@ -1,6 +1,6 @@
 export interface Search {
   searchTerm: string
-  filters: Array<Filters>
+  filters: Array<Filters | string>
 }
 
 export interface Filters {

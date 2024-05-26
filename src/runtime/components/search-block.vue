@@ -47,7 +47,7 @@ let searchTerm = ''
 
 function onSearchInput(searchValue: string) {
   searchTerm = searchValue
-  emitSearch
+  emitSearch()
 }
 
 function onFilterUpdate(filter: string) {
@@ -55,10 +55,15 @@ function onFilterUpdate(filter: string) {
   if (filterToUpdate) {
     filterToUpdate.selected = !filterToUpdate.selected
   }
+  emitSearch()
 }
 
 function emitSearch() {
-  emit('onSearch', { searchTerm, filters })
+  emit('onSearch', { searchTerm, filters: filters.value.reduce((filtersList: Array<string>, filter) => {
+    if (filter.selected) filtersList.push(filter.value)
+    return filtersList
+  }, []),
+  })
 }
 </script>
 
