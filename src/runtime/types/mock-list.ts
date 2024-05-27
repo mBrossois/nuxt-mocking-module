@@ -17,6 +17,7 @@ export type MockRequestDetails = {
 export type MockResponses = {
   name: string
   status: number
+  isDefault: boolean
   delay?: string
   body: object
 }
