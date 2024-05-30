@@ -42,17 +42,31 @@ That's it! You can now use My Module in your Nuxt app ✨
 | mocks         | []        | `[]`          | The mocked data object, read more about setting this up in mocked data object!                                                                                                         |
 
 ## Mocked data object
-The module requires a mocked data object. The data object needs to be setup as followed:
+The module requires a mocked data object. The data object has the following setup:
 ```typescript
-{
-    "mocks": [
-        {
-            "groupName": "General",
-            "requests": ["./init", "./init-post"]
-        },
-    ]
+// Mocked data object
+interface Mocks {
+  all_mocks: Array<MocksGroup>
 }
 
+interface MocksGroup {
+  groupName: string
+  requests: Array<MockRequestDetails>
+}
+
+interface MockRequestDetails {
+  name: string
+  route: string
+  method: string
+  responses: Array<MockResponses>
+}
+
+interface MockResponses {
+  name: string
+  status: number
+  delay?: string
+  body: object
+}
 ```
 
 
