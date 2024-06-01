@@ -1,14 +1,14 @@
-import { defineNuxtModule, addDevServerHandler, createResolver, extendPages, installModule, extendRouteRules } from '@nuxt/kit'
+import { defineNuxtModule, addDevServerHandler, createResolver, extendPages, extendRouteRules } from '@nuxt/kit'
 import { eventHandler, readBody, setResponseStatus } from 'h3'
-import { defu } from 'defu'
 import { apiEvent } from './runtime/event-handlers/api'
 import { mockEvent, mockResponsesEvent } from './runtime/event-handlers/mock'
+import type { MockResponses, MocksGroup } from './runtime/types/mock-list'
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {
   isActive: boolean
   apiRoutes: string[]
-  mocks: []
+  mocks: Array<MocksGroup>
   mockingRoute: string
   port: string
 }
@@ -32,9 +32,9 @@ export default defineNuxtModule<ModuleOptions>({
 
       const allmocks = _options.mocks
 
-      let activeResponses = {}
+      let activeResponses: { [key: string]: MockResponses } = {}
       allmocks.forEach((mock) => {
-        activeResponses = { ...activeResponses, ...mock.requests.reduce((map, request) => {
+        activeResponses = { ...activeResponses, ...mock.requests.reduce((map: { [key: string]: MockResponses }, request) => {
           const activeResponse = request.responses.find(response => response.isDefault)
           map[`${request.method}_${request.route}`] = activeResponse || request.responses[0]
           return map
@@ -45,6 +45,7 @@ export default defineNuxtModule<ModuleOptions>({
 
       let activeRequest = allmocks[0].requests[0].name
 
+      // Add new route to the path set in mockingRoute
       extendPages((pages) => {
         pages.push({
           name: 'nuxt-module-mocking',
@@ -53,10 +54,10 @@ export default defineNuxtModule<ModuleOptions>({
         })
       })
 
-      _nuxt.options.runtimeConfig.public.mocking = defu(_nuxt.options.runtimeConfig.public.myModule, {
+      _nuxt.options.runtimeConfig.public.mocking = {
         mock_route: _options.mockingRoute,
         mock_port: _options.port,
-      })
+      }
 
       extendRouteRules(_options.mockingRoute, {
         headers: { api_route: _options.mockingRoute },
