@@ -5,7 +5,7 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-
+The module to deal with easily switching different api responses in the FE!
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
 <!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/my-module?file=playground%2Fapp.vue) -->
@@ -13,10 +13,8 @@
 
 ## Features
 
-<!-- Highlight some of the features your module provide here -->
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+- Returning API data from the module
+- Creates a GUI on the route you want to easily change the request responses
 
 ## Quick Setup
 
@@ -31,6 +29,49 @@ yarn add nuxt-mocking-module --dev
 ```
 
 That's it! You can now use My Module in your Nuxt app ✨
+
+## Module options
+    isActive: true,
+    apiRoutes: ['/api'],
+    mockingRoute: '/mocking',
+    mocks: [],
+    port: '3000',
+
+| Option        | type      | default       | description                                                       |
+| ------------- |---------- | ------------  | ----------------------------------------------------------------- |
+| isActive      | boolean   | `true`        | Will disable the module when set to false.                        |
+| port          | string    | `'3000'`      | This is the port you will host the application on, it is required for the  api request from the mocking route. | 
+| apiRoutes     | string[]  | `['/api']`    | Define all the root api routes that are used in the application.  |
+| mockingRoute  | string    | `'/mocking'`  | The route where the GUI part will be served.                      |
+| mocks         | []        | `[]`          | The mocked data object, read more about setting this up in mocked data object!                                                                                                         |
+
+## Mocked data object
+The module requires a mocked data object. The data object has the following setup:
+```typescript
+// Mocked data object
+interface Mocks {
+  all_mocks: Array<MocksGroup>
+}
+
+interface MocksGroup {
+  groupName: string
+  requests: Array<MockRequestDetails>
+}
+
+interface MockRequestDetails {
+  name: string
+  route: string
+  method: string
+  responses: Array<MockResponses>
+}
+
+interface MockResponses {
+  name: string
+  status: number
+  delay?: string
+  body: object
+}
+```
 
 
 ## Contribution

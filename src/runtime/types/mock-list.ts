@@ -1,20 +1,20 @@
-export type Mocks = {
+export interface Mocks {
   all_mocks: Array<MocksGroup>
 }
 
-export type MocksGroup = {
+export interface MocksGroup {
   groupName: string
   requests: Array<MockRequestDetails>
 }
 
-export type MockRequestDetails = {
+export interface MockRequestDetails {
   name: string
   route: string
   method: string
   responses: Array<MockResponses>
 }
 
-export type MockResponses = {
+export interface MockResponses {
   name: string
   status: number
   isDefault: boolean
