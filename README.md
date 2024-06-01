@@ -8,13 +8,14 @@
 The module to deal with easily switching different api responses in the FE!
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/my-module?file=playground%2Fapp.vue) -->
-<!-- - [📖 &nbsp;Documentation](https://example.com) -->
 
 ## Features
 
 - Returning API data from the module
-- Creates a GUI on the route you want to easily change the request responses
+- Creates a GUI on the route you want to easily change the responses of the requests
+
+![Example of mocking route](/src/assets/img/Screenshot%202024-06-01%20at%2021.37.24.png?raw=true "Example of mocking route")
+
 
 ## Quick Setup
 
@@ -28,37 +29,46 @@ or
 yarn add nuxt-mocking-module --dev
 ```
 
+After installing the package, make sure you add it to your Nuxt config file.
+```typescript
+//Nuxt.config.ts
+
+import { getMocks } from './mocking'
+
+export default defineNuxtConfig({
+  // Add to your Nuxt modules
+  modules: ['../src/module'],
+  // Set the Modules properties
+  nuxtMockingModule: {
+    mocks: getMocks(),
+  },
+})
+
+```
+
 That's it! You can now use My Module in your Nuxt app ✨
 
-## Module options
-    isActive: true,
-    apiRoutes: ['/api'],
-    mockingRoute: '/mocking',
-    mocks: [],
-    port: '3000',
-
+## Module optionss
 | Option        | type      | default       | description                                                       |
-| ------------- |---------- | ------------  | ----------------------------------------------------------------- |
-| isActive      | boolean   | `true`        | Will disable the module when set to false.                        |
-| port          | string    | `'3000'`      | This is the port you will host the application on, it is required for the  api request from the mocking route. | 
-| apiRoutes     | string[]  | `['/api']`    | Define all the root api routes that are used in the application.  |
-| mockingRoute  | string    | `'/mocking'`  | The route where the GUI part will be served.                      |
-| mocks         | []        | `[]`          | The mocked data object, read more about setting this up in mocked data object!                                                                                                         |
+| ------------- |---------------- | ------------  | ----------------------------------------------------------------- |
+| isActive      | boolean         | `true`        | Will disable the module when set to false.                        |
+| port          | string          | `'3000'`      | This is the port you will host the application on, it is required for the  api request from the mocking route. | 
+| apiRoutes     | string[]        | `['/api']`    | Define all the root api routes that are used in the application.  |
+| mockingRoute  | string          | `'/mocking'`  | The route where the GUI part will be served.                      |
+| mocks         | MocksGroup[]   | `[]`          | The mocked data object, read more about setting this up in mocked data object!                                                                                                         |
 
 ## Mocked data object
-The module requires a mocked data object. The data object has the following setup:
+The module requires a mocked data object. The data object is based on the following interfaces (a full json object is also accepted):
 ```typescript
 // Mocked data object
-interface Mocks {
-  all_mocks: Array<MocksGroup>
-}
+Array<MocksGroup>
 
 interface MocksGroup {
   groupName: string
-  requests: Array<MockRequestDetails>
+  requests: Array<MockRequests>
 }
 
-interface MockRequestDetails {
+interface MockRequests {
   name: string
   route: string
   method: string

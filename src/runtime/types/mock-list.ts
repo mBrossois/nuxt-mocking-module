@@ -4,10 +4,10 @@ export interface Mocks {
 
 export interface MocksGroup {
   groupName: string
-  requests: Array<MockRequestDetails>
+  requests: Array<MockRequests>
 }
 
-export interface MockRequestDetails {
+export interface MockRequests {
   name: string
   route: string
   method: string
