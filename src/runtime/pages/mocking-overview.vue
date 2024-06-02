@@ -7,7 +7,7 @@
         </p>
         <dropdown-search
           :dropdown-values="headerTitles"
-          :active-value="groupName ?? ''"
+          :active-value="activeGroupName"
           component-text-type="h1"
           @select="updateGroup"
         />
@@ -21,7 +21,7 @@
         </h2>
         <request-block
           :requests="requestsShown"
-          :active-request="activeRequestName || ''"
+          :active-request="activeRequestName"
           @on-click="setActiveRequest"
         />
       </div>
@@ -56,9 +56,9 @@ const mockRoute = useRuntimeConfig().public.mocking.mock_route
 const mockPort = useRuntimeConfig().public.mocking.mock_port
 
 // These are set in the nuxt module for state management
-const { data: allMocksData, error: allMocksError, refresh: refreshAllMocks } = await useFetch(`${url}${mockPort}${mockRoute}/get-mocks`)
+const { data: allMocksData, error: allMocksError, refresh: refreshAllMocks } = await useFetch<Array<MocksGroup>>(`${url}${mockPort}${mockRoute}/get-mocks`)
 const { data: groupName, refresh: refreshGroupName } = await useFetch<string>(`${url}${mockPort}${mockRoute}/get-active-group`)
-const { data: activeRequestName, refresh: refreshActiveRequest } = await useFetch<string>(`${url}${mockPort}${mockRoute}/get-active-request`)
+const { data: requestName, refresh: refreshActiveRequest } = await useFetch<string>(`${url}${mockPort}${mockRoute}/get-active-request`)
 
 if (allMocksError.value) {
   console.log('error', allMocksError.value)
@@ -68,14 +68,20 @@ const allMocks: Array<MocksGroup> = allMocksData.value as Array<MocksGroup>
 
 const headerTitles = allMocks.map(mocks => mocks.groupName)
 
-const mappedRequests: ComputedRef<{ [key: string]: MockRequests }> = computed(() => allMocksData.value.reduce((map, mocksList) => {
-  map[mocksList.groupName] = mocksList.requests
-  return map
-}, {}))
+const mappedRequests: ComputedRef<{ [key: string]: Array<MockRequests> }> = computed(() => {
+  if (allMocksData.value) {
+    return allMocksData.value.reduce((map: { [key: string]: Array<MockRequests> }, mocksList) => {
+      map[mocksList.groupName] = mocksList.requests
+      return map
+    }, {})
+  }
+  return {}
+})
 
-const requestsShown = computed(() => searchRequests(mappedRequests.value[groupName.value ?? ''], search.value))
-
-const activeRequest: Ref<MockRequests> = computed(() => mappedRequests.value[groupName.value].find(request => request.name === activeRequestName.value) ?? { name: '...', route: '...', method: '...', responses: [{}] })
+const activeGroupName = computed(() => groupName.value ?? '')
+const requestsShown = computed(() => searchRequests(mappedRequests.value[activeGroupName.value], search.value))
+const activeRequestName = computed(() => requestName.value || '')
+const activeRequest: Ref<MockRequests> = computed(() => mappedRequests.value[activeGroupName.value].find(request => request.name === activeRequestName.value) ?? { name: '...', route: '...', method: '...', responses: [{}] } as MockRequests)
 
 const search = ref()
 
