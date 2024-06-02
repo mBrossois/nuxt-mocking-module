@@ -9,6 +9,12 @@ The module to deal with easily switching different api responses in the FE!
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
 
+## Requirements
+To use this module, you'll need to have the following in your module:
+* Typescript
+* Nuxt 3
+* App.vue should use routing with NuxtPage
+
 ## Features
 
 - Returning API data from the module
@@ -37,7 +43,7 @@ import { getMocks } from './mocking'
 
 export default defineNuxtConfig({
   // Add to your Nuxt modules
-  modules: ['../src/module'],
+  modules: ['nuxt-mocking-module'],
   // Set the Modules properties
   nuxtMockingModule: {
     mocks: getMocks(),
