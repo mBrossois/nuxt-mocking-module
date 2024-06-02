@@ -13,7 +13,6 @@ import type { Filters } from '../types/search'
 import { computed } from '#imports'
 
 const props = defineProps< Filters >()
-
 const emit = defineEmits<{ (e: 'onClick', value: string): void }>()
 
 const selectedClass = computed(() => props.selected ? 'active' : '')

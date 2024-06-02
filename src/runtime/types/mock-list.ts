@@ -16,10 +16,11 @@ export interface MockRequests {
 
 export interface MockResponses {
   name: string
-  status: number
+  status: string
+  code: number
   isDefault: boolean
   delay?: string
-  body: object
+  data: object
 }
 
 export interface InputI {
