@@ -1,4 +1,4 @@
-import { defineNuxtModule, addDevServerHandler, createResolver, extendPages, extendRouteRules } from '@nuxt/kit'
+import { defineNuxtModule, addDevServerHandler, createResolver, extendPages } from '@nuxt/kit'
 import { eventHandler, readBody, setResponseStatus } from 'h3'
 import { apiEvent } from './runtime/event-handlers/api'
 import { mockEvent, mockResponsesEvent } from './runtime/event-handlers/mock'
@@ -41,9 +41,15 @@ export default defineNuxtModule<ModuleOptions>({
         }, {}) }
       })
 
-      let activeGroup = allmocks[0].groupName
+      let activeGroup = allmocks[0] ? allmocks[0].groupName : ''
 
-      let activeRequest = allmocks[0].requests[0].name
+      let activeRequest = allmocks[0] && allmocks[0].requests && allmocks[0].requests[0] ? allmocks[0].requests[0].name : ''
+
+      // Set the runtime config values for the mocking route
+      _nuxt.options.runtimeConfig.public.mocking = {
+        mock_route: _options.mockingRoute,
+        mock_port: _options.port,
+      }
 
       // Add new route to the path set in mockingRoute
       extendPages((pages) => {
@@ -52,15 +58,6 @@ export default defineNuxtModule<ModuleOptions>({
           path: _options.mockingRoute,
           file: resolve('./runtime/pages/mocking-overview.vue'),
         })
-      })
-
-      _nuxt.options.runtimeConfig.public.mocking = {
-        mock_route: _options.mockingRoute,
-        mock_port: _options.port,
-      }
-
-      extendRouteRules(_options.mockingRoute, {
-        headers: { api_route: _options.mockingRoute },
       })
 
       // Handles Mocking api requests

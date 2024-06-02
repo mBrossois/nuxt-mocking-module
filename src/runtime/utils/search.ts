@@ -1,11 +1,11 @@
-import type { MockRequestDetails } from '../types/mock-list'
+import type { MockRequests } from '../types/mock-list'
 import type { Search } from '../types/search'
 
 export function search(list: Array<string>, searchTerm: string): Array<string> {
   return list.filter(item => item.toUpperCase().includes(searchTerm.toUpperCase()))
 }
 
-export function searchRequests(requests: Array<MockRequestDetails>, search: Search) {
+export function searchRequests(requests: Array<MockRequests>, search: Search) {
   if (search) {
     return requests.filter(item =>
       (search.filters.includes(item.method) || search.filters.length === 0) && requestAsList(item).findIndex(requestItem => requestItem.toUpperCase().includes(search.searchTerm.toUpperCase())) !== -1,
@@ -14,7 +14,7 @@ export function searchRequests(requests: Array<MockRequestDetails>, search: Sear
   return requests
 }
 
-function requestAsList(request: MockRequestDetails): Array<string> {
+function requestAsList(request: MockRequests): Array<string> {
   const responseList = request.responses.map(response => response.name)
 
   const requestList = [

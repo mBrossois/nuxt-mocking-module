@@ -71,7 +71,7 @@ import { computed, nextTick, onUnmounted, ref, type Ref } from '#imports'
 
 const props = defineProps<Dropdown>()
 
-const emit = defineEmits(['select'])
+const emit = defineEmits<{ (e: 'select', value: string): void }>()
 
 const isOpen = ref(false)
 const searchInput = ref('')

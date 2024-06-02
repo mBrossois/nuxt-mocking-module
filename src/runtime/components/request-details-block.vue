@@ -22,17 +22,17 @@
 </template>
 
 <script setup lang="ts">
-import type { MockRequestDetails } from '../types/mock-list'
+import type { MockRequests, MockResponses } from '../types/mock-list'
 import RequestDescription from './request-description.vue'
 
 import { computed, useFetch, useRuntimeConfig } from '#imports'
 
 interface MockingRequest {
-  requestDetails: MockRequestDetails
+  requestDetails: MockRequests
 }
 
 const props = defineProps<MockingRequest>()
-const emit = defineEmits(['updateDelay'])
+const emit = defineEmits<{ (e: 'updateDelay'): void }>()
 
 const responses = computed(() => props.requestDetails.responses)
 
@@ -41,10 +41,21 @@ const url = 'http://localhost:'
 const mockRoute = useRuntimeConfig().public.mocking.mock_route
 const mockPort = useRuntimeConfig().public.mocking.mock_port
 
-const { data, error, refresh } = await useFetch(`${url}${mockPort}${mockRoute}/get-active-responses`)
+interface GetActiveResponseI {
+  active_responses: {
+    [key: string]: MockResponses
+  }
+}
 
+const { data, error, refresh } = await useFetch<GetActiveResponseI>(`${url}${mockPort}${mockRoute}/get-active-responses`)
 const responseDetailsNames = computed(() => responses.value.map(response => response.name))
-const activeResponse = computed(() => data.value.active_responses[`${props.requestDetails.method}_${props.requestDetails.route}`] ?? { status: '...', name: '...' })
+
+const activeResponse = computed(() => {
+  if (data.value) {
+    return data.value.active_responses[`${props.requestDetails.method}_${props.requestDetails.route}`] ?? { status: '...', name: '...', delay: 0 }
+  }
+  return { status: '...', name: '...', delay: 0 }
+})
 
 const delay = computed(() => activeResponse.value.delay ? activeResponse.value.delay.toString() : '0')
 

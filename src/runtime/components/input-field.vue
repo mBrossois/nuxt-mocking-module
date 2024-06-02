@@ -31,7 +31,7 @@ interface Input extends HTMLElement {
 
 const input: Ref<Input | undefined > = ref()
 
-const emit = defineEmits({ inputValue: String })
+const emit = defineEmits<{ (e: 'inputValue', value: string): void }>()
 
 function onInput() {
   if (input.value) emit('inputValue', input.value.value)

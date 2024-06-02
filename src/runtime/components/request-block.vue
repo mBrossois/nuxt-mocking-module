@@ -6,7 +6,7 @@
         :key="request.name"
         class="default-font default-font-size"
         :class="activeClass(request.name)"
-        @click="emits('onClick', request.name)"
+        @click="onClick(request.name)"
       >
         {{ request.name }}
       </button>
@@ -21,11 +21,11 @@
 </template>
 
 <script setup lang="ts">
-import type { MockRequestDetails } from '../types/mock-list'
+import type { MockRequests } from '../types/mock-list'
 import { computed } from '#imports'
 
 const props = defineProps({
-  requests: Array<MockRequestDetails>,
+  requests: Array<MockRequests>,
   activeRequest: String,
 })
 
@@ -35,7 +35,11 @@ function activeClass(request: string) {
   return props.activeRequest === request ? 'active' : ''
 }
 
-const emits = defineEmits({ onClick: {} })
+const emits = defineEmits<{ (e: 'onClick', value: string): void }>()
+
+function onClick(name: string) {
+  emits('onClick', name)
+}
 </script>
 
 <style scoped>

@@ -39,7 +39,7 @@ interface props {
 }
 
 defineProps<props>()
-const emit = defineEmits({ selectDropdown: String, updateInput: String })
+const emit = defineEmits<{ (e: 'selectDropdown' | 'updateInput', value: string): void }>()
 
 function onSelect(value: string) {
   emit('selectDropdown', value)
