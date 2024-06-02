@@ -25,7 +25,7 @@
 import type { MockRequestDetails } from '../types/mock-list'
 import RequestDescription from './request-description.vue'
 
-import { computed, useFetch } from '#imports'
+import { computed, useFetch, useRuntimeConfig } from '#imports'
 
 interface MockingRequest {
   requestDetails: MockRequestDetails

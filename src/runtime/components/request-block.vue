@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import type { MockRequestDetails } from '../types/mock-list'
+import { computed } from '#imports'
 
 const props = defineProps({
   requests: Array<MockRequestDetails>,
