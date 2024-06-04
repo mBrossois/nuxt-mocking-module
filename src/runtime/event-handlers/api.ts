@@ -6,5 +6,5 @@ export const apiEvent = (event: H3Event<EventHandlerRequest>, apiUrl: string, re
   const activeResponse = responses[`${event.method}_${apiUrl + event.path}`]
   setResponseStatus(event, activeResponse.code, activeResponse.status)
   // Needs to be promise to deal with the timeout
-  return new Promise(resolve => setTimeout(resolve, Number(activeResponse.delay), activeResponse.data))
+  return new Promise((resolve) => setTimeout( () => { resolve(activeResponse.data || activeResponse.message) }, Number(activeResponse.delay)));
 }
