@@ -58,11 +58,11 @@ That's it! You can now use My Module in your Nuxt app ✨
 | Option        | type      | default       | description                                                       |
 | ------------- |---------------- | ------------  | ----------------------------------------------------------------- |
 | isActive      | boolean         | `true`        | Will disable the module when set to false.                        |
-| devOnly       | boolean         | `true`        | Will enable the module only on dev build                          |
+| devOnly       | boolean         | `true`        | Will enable the module only on dev build, if you set this on `false` make sure you have the nuxt part on a running server.                                                         |
 | port          | string          | `'3000'`      | This is the port you will host the application on, it is required for the  api request from the mocking route. | 
 | apiRoutes     | string[]        | `['/api']`    | Define all the root api routes that are used in the application.  |
 | mockingRoute  | string          | `'/mocking'`  | The route where the GUI part will be served.                      |
-| mocks         | MocksGroup[]   | `[]`          | The mocked data object, read more about setting this up in mocked data object!                                                                                                         |
+| mocks         | MocksGroup[]   | `[]`          | The mocked data object, read more about setting this up in mocked data object!                                                                                                          |
 
 ## Mocked data object
 The module requires a mocked data object. The data object is based on the following interfaces (a full json object is also accepted):
