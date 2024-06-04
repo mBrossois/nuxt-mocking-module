@@ -30,7 +30,7 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup(_options, _nuxt) {
     const devMode = _nuxt.options.vite.mode === 'development'
-    if (_options.isActive && (!devOnly || (devOnly && devMode) )) {
+    if (_options.isActive && (!_options.devOnly || (_options.devOnly && devMode))) {
       const { resolve } = createResolver(import.meta.url)
 
       const allmocks = _options.mocks
