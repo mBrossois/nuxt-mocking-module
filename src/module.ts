@@ -29,7 +29,7 @@ export default defineNuxtModule<ModuleOptions>({
     port: '3000',
   },
   async setup(_options, _nuxt) {
-    const devMode = import.meta.dev
+    const devMode = _nuxt.options.vite.mode === 'development'
     if (_options.isActive && (!devOnly || (devOnly && devMode) )) {
       const { resolve } = createResolver(import.meta.url)
 
