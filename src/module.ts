@@ -7,6 +7,7 @@ import type { MockResponses, MocksGroup } from './runtime/types/mock-list'
 // Module options TypeScript interface definition
 export interface ModuleOptions {
   isActive: boolean
+  devOnly: boolean
   apiRoutes: string[]
   mocks: Array<MocksGroup>
   mockingRoute: string
@@ -21,13 +22,15 @@ export default defineNuxtModule<ModuleOptions>({
   // Default configuration options of the Nuxt module
   defaults: {
     isActive: true,
+    devOnly: true,
     apiRoutes: ['/api'],
     mockingRoute: '/mocking',
     mocks: [],
     port: '3000',
   },
   async setup(_options, _nuxt) {
-    if (_options.isActive) {
+    const devMode = import.meta.dev
+    if (_options.isActive && (!devOnly || (devOnly && devMode) )) {
       const { resolve } = createResolver(import.meta.url)
 
       const allmocks = _options.mocks

@@ -58,6 +58,7 @@ That's it! You can now use My Module in your Nuxt app ✨
 | Option        | type      | default       | description                                                       |
 | ------------- |---------------- | ------------  | ----------------------------------------------------------------- |
 | isActive      | boolean         | `true`        | Will disable the module when set to false.                        |
+| devOnly       | boolean         | `true`        | Will enable the module only on dev build                          |
 | port          | string          | `'3000'`      | This is the port you will host the application on, it is required for the  api request from the mocking route. | 
 | apiRoutes     | string[]        | `['/api']`    | Define all the root api routes that are used in the application.  |
 | mockingRoute  | string          | `'/mocking'`  | The route where the GUI part will be served.                      |
