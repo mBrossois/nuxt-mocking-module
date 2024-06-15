@@ -18,7 +18,7 @@
     <div
       id="myDropdown"
       ref="dropdown"
-      class="dropdown-content"
+      class="dropdown-content box-shadow"
       tabindex="0"
       :class="dropdownCss"
       @click.stop
@@ -165,7 +165,6 @@ onUnmounted(() => {
   position: absolute;
   background-color: white;
   min-width: 150px;
-  box-shadow: 1px 1px 4px 0px #0006;
   border-radius: 5px;
   z-index: 1;
   padding-top: .5rem;

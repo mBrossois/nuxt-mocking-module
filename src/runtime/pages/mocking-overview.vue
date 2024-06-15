@@ -133,7 +133,7 @@ function filterRequests(searchValue: Search) {
 
 <style scoped>
 #mocking-body {
-  padding: 4rem 0;
+  padding: 3.5rem 0;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -157,7 +157,7 @@ function filterRequests(searchValue: Search) {
   gap: 10px;
   grid-auto-rows: minmax(50px, auto);
 
-  padding: 5rem;
+  padding: 3.5rem;
   box-sizing: border-box;
 }
 

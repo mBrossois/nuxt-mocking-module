@@ -12,6 +12,11 @@
       @update-input="updateDelay"
     />
 
+    <ResponseBlock
+      class="response"
+      :response="activeResponse"
+    />
+
     <p
       v-if="error"
       class="error"
@@ -24,6 +29,7 @@
 <script setup lang="ts">
 import type { MockRequests, MockResponses } from '../types/mock-list'
 import RequestDescription from './request-description.vue'
+import ResponseBlock from './response-block.vue'
 
 import { computed, useFetch, useRuntimeConfig } from '#imports'
 
@@ -121,11 +127,6 @@ const requestLayout = computed(() => [
       componentTextType: 'p',
     },
   },
-  {
-    class: 'status',
-    description: 'Status',
-    details: activeResponse.value.status.toString(),
-  },
 ])
 </script>
 
@@ -165,8 +166,8 @@ const requestLayout = computed(() => [
     grid-row: 4;
 }
 
-.status {
-    grid-column: 1;
+.response {
+    grid-column: 1/4;
     grid-row: 5;
 }
 .error {
