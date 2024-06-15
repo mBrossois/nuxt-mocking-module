@@ -1,6 +1,6 @@
 <template>
   <button
-    class="default-font-size default-font"
+    class="default-font-size default-font box-shadow"
     :class="selectedClass"
     @click="onToggleSelect"
   >
@@ -31,7 +31,6 @@ button {
     cursor: pointer;
 
     border-radius: 5px;
-    box-shadow: 1px 1px 4px 0px #0006;
 
     transition: all ease-in-out 150ms;
 }

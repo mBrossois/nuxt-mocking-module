@@ -1,5 +1,5 @@
 <template>
-  <div class="search-box flex align-center">
+  <div class="search-box flex align-center box-shadow">
     <img
       v-if="isSearch"
       src="../assets/svg/search-icon.svg"
@@ -43,7 +43,6 @@ function onInput() {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    box-shadow: 1px 1px 4px 0px #0006;
     border-radius: 5px;
     gap: 1rem;
     box-sizing: border-box;
