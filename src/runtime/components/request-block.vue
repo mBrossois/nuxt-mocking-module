@@ -1,5 +1,8 @@
 <template>
-  <div class="requests">
+  <div
+    class="requests"
+    :class="{ 'empty-list': showEmptyList }"
+  >
     <div class="flex-column">
       <button
         v-for="request of requests"
@@ -43,11 +46,11 @@ function onClick(name: string) {
 </script>
 
 <style scoped>
-.requests >:not(p.error-message) {
+.requests:not(.empty-list) {
   border-radius: 5px;
   margin-top: .5rem;
   box-shadow: 1px 1px 4px 0px #0006;
-  max-height: 20rem;
+  max-height: 24.5rem;
   overflow-y: auto;
 }
 
