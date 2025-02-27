@@ -1,7 +1,7 @@
 {
   "name": "nuxt-mocking-module",
   "description": "The nuxt module that makes live mocking possible without external server",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "repository": "mbrossois/nuxt-mocking-module",
   "license": "MIT",
   "type": "module",
