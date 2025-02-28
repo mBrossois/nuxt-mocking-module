@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v1.0.7
+
+[compare changes](https://github.com/mbrossois/nuxt-mocking-module/compare/v1.0.7...v1.0.7)
+
 ### 🏡 Chore
 
 - **release:** V1.0.6 ([8d25081](https://github.com/mbrossois/nuxt-mocking-module/commit/8d25081))
