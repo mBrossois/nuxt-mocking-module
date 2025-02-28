@@ -1,6 +1,18 @@
 # Changelog
 
 
+### 🏡 Chore
+
+- **release:** V1.0.6 ([8d25081](https://github.com/mbrossois/nuxt-mocking-module/commit/8d25081))
+
+### ❤️ Contributors
+
+- Mark De Neut Brossois <mark.dnb@live.nl>
+
+## v1.0.6
+
+[compare changes](https://github.com/mbrossois/nuxt-mocking-module/compare/v1.0.5...v1.0.6)
+
 ## v1.0.5
 
 [compare changes](https://github.com/mbrossois/nuxt-mocking-module/compare/v1.0.4...v1.0.5)

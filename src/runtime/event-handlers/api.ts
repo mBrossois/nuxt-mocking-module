@@ -1,5 +1,5 @@
 import type { H3Event, EventHandlerRequest } from 'h3'
-import { setResponseStatus } from 'h3'
+import { setHeaders, setResponseStatus } from 'h3'
 import type { MockResponses } from '../types/mock-list'
 
 export const apiEvent = (event: H3Event<EventHandlerRequest>, apiUrl: string, responses: { [key: string]: MockResponses }) => {
@@ -13,6 +13,12 @@ export const apiEvent = (event: H3Event<EventHandlerRequest>, apiUrl: string, re
 
   const response = activeResponse.data || activeResponse.message
   setResponseStatus(event, activeResponse.code, activeResponse.status)
+
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+  }
+  setHeaders(event, headers)
+
   // Needs to be promise to deal with the timeout
   return new Promise(resolve => setTimeout(() => {
     resolve(response)
