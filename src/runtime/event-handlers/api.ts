@@ -11,7 +11,7 @@ export const apiEvent = (event: H3Event<EventHandlerRequest>, apiUrl: string, re
   }
   const activeResponse = responses[activeKey]
 
-  const response = activeResponse.data || activeResponse.message
+  const response = activeResponse.response
   setResponseStatus(event, activeResponse.code, activeResponse.status)
 
   const headers = {

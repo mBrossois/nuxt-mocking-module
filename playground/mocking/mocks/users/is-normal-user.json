@@ -3,14 +3,16 @@
     "status": "success",
     "code": 200,
     "isDefault": true,
-    "data": {
-        "id": 123,
-        "name": "John Doe",
-        "email": "johndoe@example.com",
-        "roles": [
-            "user"
-        ],
-        "created_at": "2024-05-17T12:00:00Z",
-        "updated_at": "2024-05-18T12:00:00Z"
+    "response": {
+        "data": {
+            "id": 123,
+            "name": "John Doe",
+            "email": "johndoe@example.com",
+            "roles": [
+                "user"
+            ],
+            "created_at": "2024-05-17T12:00:00Z",
+            "updated_at": "2024-05-18T12:00:00Z"
+        }
     }
 }

@@ -15,7 +15,8 @@ const user = ref('')
 async function onClick() {
   try {
     const response = await $fetch('/api/init', { method: 'GET' })
-    user.value = response.name
+    console.log(response)
+    user.value = response.data.name
   }
   catch (e) {
     user.value = e.response.statusText

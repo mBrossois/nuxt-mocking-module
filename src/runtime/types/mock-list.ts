@@ -20,8 +20,7 @@ export interface MockResponses {
   code: number
   isDefault: boolean
   delay?: string
-  data?: object
-  message?: string
+  response?: unknown
 }
 
 export interface InputI {

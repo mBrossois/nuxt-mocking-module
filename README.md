@@ -84,9 +84,11 @@ interface MockRequests {
 
 interface MockResponses {
   name: string
-  status: number
+  status: string
+  code: number
+  isDefault: boolean
   delay?: string
-  body: object
+  response?: unknown
 }
 ```
 
