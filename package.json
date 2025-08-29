@@ -1,7 +1,7 @@
 {
   "name": "nuxt-mocking-module",
   "description": "The nuxt module that makes live mocking possible without external server",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "repository": "mbrossois/nuxt-mocking-module",
   "license": "MIT",
   "type": "module",
@@ -23,6 +23,7 @@
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "release:major": "npm run lint && npm run test && npm run prepack && changelogen --release --major && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
