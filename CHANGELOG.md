@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v3.0.0
+
+[compare changes](https://github.com/mbrossois/nuxt-mocking-module/compare/v2.0.0...v3.0.0)
+
 ## v2.0.0
 
 [compare changes](https://github.com/mbrossois/nuxt-mocking-module/compare/v1.0.7...v2.0.0)
