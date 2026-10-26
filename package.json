@@ -7,13 +7,19 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/types.d.ts",
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
     }
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types.d.mts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
@@ -30,22 +36,21 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.11.2",
-    "h3": "^1.11.1"
+    "@nuxt/kit": "^4.6.2",
+    "h3": "^1.13.0"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.1.5",
-    "@nuxt/eslint-config": "^0.3.6",
-    "@nuxt/module-builder": "^0.5.5",
-    "@nuxt/schema": "^3.11.2",
-    "@nuxt/test-utils": "^3.12.0",
+    "@nuxt/eslint-config": "^1.0.0",
+    "@nuxt/module-builder": "^1.0.0",
+    "@nuxt/schema": "^4.6.2",
+    "@nuxt/test-utils": "^3.15.0",
     "@types/node": "^20.12.7",
     "changelogen": "^0.5.5",
     "eslint": "^9.0.0",
-    "nuxt": "^3.11.2",
-    "typescript": "latest",
-    "vitest": "^1.4.0",
-    "vue-tsc": "^2.0.14"
+    "nuxt": "^4.6.2",
+    "typescript": "5.9",
+    "vitest": "^3.0.0",
+    "vue-tsc": "^2.1.0"
   },
   "overrides": {
     "vue": "latest"

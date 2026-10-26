@@ -12,7 +12,7 @@ The module to deal with easily switching different api responses in the FE!
 ## Requirements
 To use this module, you'll need to have the following in your module:
 * Typescript
-* Nuxt 3
+* Nuxt 4
 * App.vue should use routing with NuxtPage
 
 ## Features

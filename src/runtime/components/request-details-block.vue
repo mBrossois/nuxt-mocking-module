@@ -89,7 +89,7 @@ async function updateDelay(delay: string) {
       emit('updateDelay')
     }
   }
-  catch (e) {
+  catch {
     console.error('something went wrong')
   }
 }

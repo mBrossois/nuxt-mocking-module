@@ -29,7 +29,7 @@ interface Input extends HTMLElement {
   value: string
 }
 
-const input: Ref<Input | undefined > = ref()
+const input: Ref<Input | undefined> = ref()
 
 const emit = defineEmits<{ (e: 'inputValue', value: string): void }>()
 

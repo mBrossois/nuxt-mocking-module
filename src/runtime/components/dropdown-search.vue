@@ -93,13 +93,17 @@ function selectedClass(value: string) {
 }
 
 function onToggle() {
-  !isOpen.value && nextTick(() => {
-    isOpen.value = true
-    document.addEventListener('click', closeDropdown)
-  })
-  isOpen.value && nextTick(() => {
-    closeDropdown()
-  })
+  if (!isOpen.value) {
+    nextTick(() => {
+      isOpen.value = true
+      document.addEventListener('click', closeDropdown)
+    })
+  }
+  else {
+    nextTick(() => {
+      closeDropdown()
+    })
+  }
 }
 
 function onKeyUp() {

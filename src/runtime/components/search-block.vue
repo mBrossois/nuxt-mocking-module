@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Search } from '../types/search'
+import type { Search } from '../types/search'
 import InputField from './input-field.vue'
 import SelectButton from './select-button.vue'
 import { ref } from '#imports'

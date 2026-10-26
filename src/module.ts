@@ -143,7 +143,7 @@ export default defineNuxtModule<ModuleOptions>({
               const responseId = allmocks[groupId].requests[requestId].responses.findIndex(response => response.name === activeResponses[body.request].name)
               allmocks[groupId].requests[requestId].responses[responseId].delay = body.delay
             }
-            catch (e) {
+            catch {
               console.log('Could not set delay on global mocks item')
             }
             activeResponses[body.request].delay = body.delay
